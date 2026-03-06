@@ -1,6 +1,7 @@
 import HeroSection from '@/components/HeroSection';
 import EmotionMap from '@/components/EmotionMap';
 import InsightSection from '@/components/InsightSection';
+import PsychologySection from '@/components/PsychologySection';
 
 const Index = () => {
   return (
@@ -8,6 +9,7 @@ const Index = () => {
       <HeroSection />
       <EmotionMap />
       <InsightSection />
+      <PsychologySection />
     </div>
   );
 };
