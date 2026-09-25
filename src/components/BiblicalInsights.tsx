@@ -43,7 +43,7 @@ const BiblicalInsights = () => {
                   <blockquote className="text-sm italic text-secondary-foreground border-l-2 border-insight/40 pl-3 mb-1">
                     “{item.verse}”
                   </blockquote>
-                  <p className="font-mono text-[10px] text-muted-foreground pl-3 mb-2">{item.reference} (NIV)</p>
+                  <p className="font-mono text-[10px] text-muted-foreground pl-3 mb-2">{item.reference} (KJV)</p>
                   <p className="text-sm text-muted-foreground leading-relaxed">{item.trading}</p>
                 </li>
               ))}
