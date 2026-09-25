@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { type EmotionNode, ZONE_CONFIG, emotionNodes } from '@/data/emotionData';
+import BiblicalInsights from '@/components/BiblicalInsights';
 
 interface NodeDetailProps {
   node: EmotionNode;
@@ -114,6 +115,8 @@ const NodeDetail = ({ node, onClose }: NodeDetailProps) => {
               Every controllable trigger = edge leak. Awareness is the first step to breaking the cycle.
             </p>
           </div>
+
+          <BiblicalInsights />
         </div>
       </motion.div>
     </>
