@@ -1,14 +1,23 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { emotionNodes, ZONE_CONFIG, type EmotionZone, type EmotionNode } from '@/data/emotionData';
+import { emotionNodes, ZONE_CONFIG, type EmotionZone } from '@/data/emotionData';
+import { byId } from '@/data/graph';
 import NodeDetail from './NodeDetail';
+import MindMap from './MindMap';
 
 const zones: EmotionZone[] = ['trigger', 'emotion', 'behavior', 'consequence'];
 
-const EmotionMap = () => {
+/** The atlas: the map (lines between cards) or the cards in a grid, and a card's details. */
+const EmotionMap = ({ selected, onSelect, detail, onDetail }: {
+  selected: string | null;
+  onSelect: (id: string | null) => void;
+  detail: string | null;
+  onDetail: (id: string | null) => void;
+}) => {
+  const [view, setView] = useState<'map' | 'cards'>('map');
   const [activeZone, setActiveZone] = useState<EmotionZone | null>(null);
-  const [selectedNode, setSelectedNode] = useState<EmotionNode | null>(null);
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
+  const selectedNode = detail ? byId.get(detail) ?? null : null;
 
   const filteredNodes = activeZone
     ? emotionNodes.filter(n => n.zone === activeZone)
@@ -28,6 +37,24 @@ const EmotionMap = () => {
   return (
     <section id="atlas" className="relative py-24 px-6">
       <div className="max-w-7xl mx-auto">
+        <div className="flex justify-center mb-8">
+          <div className="inline-flex rounded-lg border border-border p-1 font-mono text-xs tracking-wider">
+            {(['map', 'cards'] as const).map(v => (
+              <button key={v} onClick={() => setView(v)} className={`px-4 py-2 rounded-md transition-all ${view === v ? 'bg-foreground/10 text-foreground' : 'text-muted-foreground'}`}>
+                {v === 'map' ? 'MAP' : 'CARDS'}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {view === 'map' && (
+          <>
+            <p className="text-center text-sm text-muted-foreground mb-6">Tap a card to light up its chain. Tap it again for what to do.{' '}<span className="sm:hidden">Swipe sideways to see all four columns.</span></p>
+            <MindMap selected={selected} onSelect={onSelect} onOpen={onDetail} />
+          </>
+        )}
+
+        {view === 'cards' && (<>
         {/* Zone Selector */}
         <div className="flex flex-wrap items-center justify-center gap-3 mb-16">
           <button
@@ -93,7 +120,7 @@ const EmotionMap = () => {
                   }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.3 }}
-                  onClick={() => setSelectedNode(node)}
+                  onClick={() => onDetail(node.id)}
                   onMouseEnter={() => setHoveredNode(node.id)}
                   onMouseLeave={() => setHoveredNode(null)}
                   className={`relative text-left p-4 rounded-xl border transition-all cursor-pointer group ${config.borderClass} ${config.bgClass} hover:${config.glowClass}`}
@@ -118,12 +145,13 @@ const EmotionMap = () => {
             })}
           </AnimatePresence>
         </motion.div>
+        </>)}
       </div>
 
       {/* Detail Panel */}
       <AnimatePresence>
         {selectedNode && (
-          <NodeDetail node={selectedNode} onClose={() => setSelectedNode(null)} />
+          <NodeDetail key={selectedNode.id} node={selectedNode} onClose={() => onDetail(null)} onGo={id => { onDetail(id); onSelect(id); }} />
         )}
       </AnimatePresence>
     </section>

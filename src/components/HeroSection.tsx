@@ -61,6 +61,12 @@ const HeroSection = () => {
             Explore the Atlas
           </a>
           <a
+            href="#check-in"
+            className="px-8 py-4 border border-danger/50 text-danger font-medium rounded-lg hover:bg-danger/10 transition-all"
+          >
+            I'm feeling…
+          </a>
+          <a
             href="#insight"
             className="px-8 py-4 border border-border text-secondary-foreground font-medium rounded-lg hover:bg-secondary transition-all"
           >

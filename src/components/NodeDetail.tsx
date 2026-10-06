@@ -2,13 +2,15 @@ import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { type EmotionNode, ZONE_CONFIG, emotionNodes } from '@/data/emotionData';
 import BiblicalInsights from '@/components/BiblicalInsights';
+import FixBox from '@/components/FixBox';
 
 interface NodeDetailProps {
   node: EmotionNode;
   onClose: () => void;
+  onGo: (id: string) => void; // opens a connected card
 }
 
-const NodeDetail = ({ node, onClose }: NodeDetailProps) => {
+const NodeDetail = ({ node, onClose, onGo }: NodeDetailProps) => {
   const config = ZONE_CONFIG[node.zone];
   const connectedNodes = emotionNodes.filter(n => node.connections.includes(n.id));
   const incomingNodes = emotionNodes.filter(n => n.connections.includes(node.id));
@@ -66,6 +68,10 @@ const NodeDetail = ({ node, onClose }: NodeDetailProps) => {
             </div>
           )}
 
+          <div className="mb-8">
+            <FixBox id={node.id} zone={node.zone} />
+          </div>
+
           {/* Incoming Connections */}
           {incomingNodes.length > 0 && (
             <div className="mb-8">
@@ -76,10 +82,11 @@ const NodeDetail = ({ node, onClose }: NodeDetailProps) => {
                 {incomingNodes.map(n => {
                   const c = ZONE_CONFIG[n.zone];
                   return (
-                    <div key={n.id} className={`p-3 rounded-lg border ${c.borderClass} ${c.bgClass}`}>
+                    <button key={n.id} onClick={() => onGo(n.id)} className={`w-full text-left p-3 rounded-lg border ${c.borderClass} ${c.bgClass} hover:brightness-125 transition-all`}>
                       <span className={`font-mono text-[10px] ${c.textClass} mr-2`}>{c.label.split(' ')[0]}</span>
                       <span className="text-sm text-foreground">{n.label}</span>
-                    </div>
+                      <span className="float-right text-muted-foreground">›</span>
+                    </button>
                   );
                 })}
               </div>
@@ -96,10 +103,11 @@ const NodeDetail = ({ node, onClose }: NodeDetailProps) => {
                 {connectedNodes.map(n => {
                   const c = ZONE_CONFIG[n.zone];
                   return (
-                    <div key={n.id} className={`p-3 rounded-lg border ${c.borderClass} ${c.bgClass}`}>
+                    <button key={n.id} onClick={() => onGo(n.id)} className={`w-full text-left p-3 rounded-lg border ${c.borderClass} ${c.bgClass} hover:brightness-125 transition-all`}>
                       <span className={`font-mono text-[10px] ${c.textClass} mr-2`}>{c.label.split(' ')[0]}</span>
                       <span className="text-sm text-foreground">{n.label}</span>
-                    </div>
+                      <span className="float-right text-muted-foreground">›</span>
+                    </button>
                   );
                 })}
               </div>
